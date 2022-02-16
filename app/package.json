@@ -1,0 +1,28 @@
+{
+  "name": "dev-server-1",
+  "version": "0.8.7",
+  "description": "Development Server 1 2022",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lham-ss/dev-server-1.git"
+  },
+  "keywords": [
+    "server"
+  ],
+  "author": "Lawrence Ham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lham-ss/dev-server-1/issues"
+  },
+  "homepage": "https://github.com/lham-ss/dev-server-1#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.1"
+  }
+}
