@@ -14,11 +14,11 @@ app.use(cors(corsOptions));                       // set up CORS policy
 app.use(express.json());                          // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true }));  // parse requests of content-type - application/x-www-form-urlencoded
 
-
 app.get("/", (req, res) => {
-    res.json({ message: "Welcome to dev-server-1." });  // set up a test route
+    res.json({ message: "Welcome to dev-server-1. We are running." });  // set up a test route
 });
 
+require('./routes/admin.routes')(app);
 
 const mongo = require('./mongo_connector');
 
