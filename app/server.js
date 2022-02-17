@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.HTTP_PORT || 4000;
 
 var corsOptions = {
     origin: "http://localhost:" + PORT
@@ -23,11 +23,20 @@ app.get("/", (req, res) => {
 const mongo = require('./mongo_connector');
 
 async function main() {
-    await mongo.connect();
+    await mongo.connectToDatabase()
+        .catch(err => {
+            console.log('--- Error connecting to MongoDB ---');
+            console.trace(err);
+            console.log('--- Killing process..');
+
+            process.exit();
+        });
 
     if (!mongo.GetConnection()) {
-        console.log('We do not have a mongo connetion... killing process.');
-        process.exit(1);
+        console.log('--- No exception thrown but mongo connetion still undefined ---');
+        console.log('--- Killing process...');
+
+        process.exit();
     }
 
     app.listen(PORT, () => {

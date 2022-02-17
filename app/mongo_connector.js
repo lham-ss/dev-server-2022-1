@@ -1,19 +1,18 @@
-require('dotenv').config();            // set up .env variables
-
-const mongoose = require('mongoose');
+const db = require("./models");
 
 let connection = null;
 
-async function connectToAtlas() {
+async function connectToDatabase() {
     return new Promise((resolve, reject) => {
+
         let mongoOptions = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         };
 
-        mongoose.connect(process.env.MONGODB_URI, mongoOptions).catch((err) => reject(err));
+        db.mongoose.connect(db.url, mongoOptions).catch((err) => reject(err));
 
-        connection = mongoose.connection;
+        connection = db.mongoose.connection;
 
         connection.once('open', () => {
             console.log('MongoDB Atlas database connection established successfully!');
@@ -21,7 +20,7 @@ async function connectToAtlas() {
         });
 
         connection.on('error', (err) => {
-            console.log("MongoDB Atlas connection error. (Did you add this IP to the Mongo Atlas WhiteList?)\n" + err);
+            console.log("MongoDB Atlas connection error. (Did you add this IP to the Mongo Atlas WhiteList?)\n");
             reject(err);
         });
     })
@@ -30,5 +29,5 @@ async function connectToAtlas() {
 module.exports = {
     GetConnection: () => connection,
 
-    connect: connectToAtlas,
+    connectToDatabase,
 };
