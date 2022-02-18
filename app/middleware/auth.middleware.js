@@ -10,6 +10,7 @@ const isUserAuthenticated = (req, res, next) => {
         })
     } else {
         const token = req.headers['auth-token'];
+
         if (token) {
             return verifyWebToken(token)
                 .then((user) => {

@@ -18,8 +18,6 @@ exports.create = async (req, res) => {
 
         const admin = await Admin.create({ firstName, lastName, phoneNumber, email, isActive: false, password: hashed });
 
-        // console.log(admin);
-
         const token = jwt.sign({ type: "admin", id: admin._id, email }, process.env.JWT_SECRET, {
             expiresIn: 86400 // expires in 24 hours
         });
@@ -54,7 +52,7 @@ exports.findOne = async (req, res) => {
     try {
         const admin = await Admin.findById(id);
 
-        return res.status(200).send({ result: admin, message: "Get the admin successfully!" })
+        return res.status(200).send({ result: admin, message: "Success." })
     } catch (error) {
         console.trace(error);
 
@@ -82,14 +80,34 @@ exports.update = async (req, res) => {
     }
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete an admin with the specified id in the request
 exports.delete = async (req, res) => {
+    const id = req.params.id;
 
+    // req.id will be set in auth.middleware
+    if (!id || !req.id) {
+        return res.status(400).send({ error: true, message: "Missing Parameters!" })
+    }
+
+    if (req.id == id) {
+        return res.status(200).send({ error: true, message: "You cannot delete your own account." })
+    }
+
+    try {
+        const deletedAdmin = await Admin.deleteOne({ _id: id });
+
+        return res.status(200).send({ status: true, result: deletedAdmin, message: "Removed the admin successfully." })
+    }
+    catch (error) {
+        console.error(error);
+
+        return res.status(500).send({ error: true, message: error });
+    }
 };
 
 // Delete all documents from the database.
 exports.deleteAll = async (req, res) => {
-
+    res.status(200).send({ message: 'deleteAll route is unavailable for admins.' })
 };
 
 // Find all active admins
