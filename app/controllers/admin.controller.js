@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
 
         const admin = await Admin.create({ firstName, lastName, phoneNumber, email, isActive: false, password: hashed });
 
-        console.log(admin);
+        // console.log(admin);
 
         const token = jwt.sign({ type: "admin", id: admin._id, email }, process.env.JWT_SECRET, {
             expiresIn: 86400 // expires in 24 hours
@@ -46,26 +46,61 @@ exports.findAll = async (req, res) => {
 }
 
 // Find a single document with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
+    const id = req.params.id;
 
+    if (!id) return res.status(400).send({ error: true, auth: false, message: "Missing Parameters: id" });
+
+    try {
+        const admin = await Admin.findById(id);
+
+        return res.status(200).send({ status: true, result: admin, message: "Get the admin successfully!" })
+    } catch (error) {
+        console.trace(error);
+
+        return res.status(500).send({ error: true, status: false, message: error });
+    }
 };
 
 // Update a document by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
+    const id = req.params.id;
+    const { firstName, lastName, email, phoneNumber } = req.body;
 
+    if (!id || !firstName || !lastName || !email) {
+        return res.status(400).send({ auth: false, message: "Missing Parameters!" })
+    }
+
+    try {
+        const admin = await Admin.updateOne({ _id: id }, { firstName, lastName, email, phoneNumber });
+
+        return res.status(200).send({ status: true, result: admin, message: "Update the admin successfully!" })
+    } catch (error) {
+        console.trace(error);
+
+        return res.status(500).send({ status: false, message: error });
+    }
 };
 
 // Delete a Tutorial with the specified id in the request
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
 
 };
 
 // Delete all documents from the database.
-exports.deleteAll = (req, res) => {
+exports.deleteAll = async (req, res) => {
 
 };
 
 // Find all active admins
-exports.findAllActive = (req, res) => {
+exports.findAllActive = async (req, res) => {
+    try {
+        let all = await Admin.find({ isActive: true });
 
+        res.status(200).send({ error: false, admins: all });
+    }
+    catch (err) {
+        console.trace(err);
+        res.status(500).json({ error: true, message: err });
+    }
 };

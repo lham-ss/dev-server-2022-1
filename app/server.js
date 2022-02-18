@@ -4,6 +4,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+/*
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+dotenv.config();
+const app = express();
+*/
+
 const PORT = process.env.HTTP_PORT || 4000;
 
 var corsOptions = {
@@ -19,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 require('./routes/admin.routes')(app);
+require('./routes/auth.routes')(app);
 
 const mongo = require('./mongo_connector');
 
@@ -40,7 +49,7 @@ async function main() {
     }
 
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}.`);      // listen for incoming http requests on PORT
+        console.log(`--- Server is running on port ${PORT}.`);      // listen for incoming http requests on PORT
     });
 }
 
