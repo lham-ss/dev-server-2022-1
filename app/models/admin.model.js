@@ -9,7 +9,7 @@ module.exports = (mongoose) => {
             isActive: { type: Boolean, required: true, default: true },
             email: { type: String, required: true },
             password: { type: String, required: true },
-            registeredDate: { type: Date, default: Date.now() },
+            // registeredDate: { type: Date, default: Date.now() }, not needed with timestamps?
         },
         {
             timestamps: true,

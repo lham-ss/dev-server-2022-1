@@ -20,7 +20,7 @@ const isUserAuthenticated = (req, res, next) => {
                     next()
                 })
                 .catch((err) => {
-                    console.error('JsonWebTokenError: invalid token... refusing authentication.')
+                    console.error('--- JsonWebTokenError: invalid token... refusing authentication.')
 
                     return res.status(401).json({
                         status: 401,

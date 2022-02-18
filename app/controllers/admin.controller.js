@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
     const { firstName, lastName, email, password, phoneNumber } = req.body;
 
     if (!email || !password) {
-        return res.status(400).send({ status: false, auth: false, message: "Missing Parameters: email or password!" });
+        return res.status(400).send({ error: true, message: "Missing Parameters: email or password!" });
     }
 
     try {
@@ -24,11 +24,11 @@ exports.create = async (req, res) => {
             expiresIn: 86400 // expires in 24 hours
         });
 
-        return res.status(200).send({ auth: true, token: token, result: admin, message: "Successfully registered." });
+        return res.status(200).send({ auth: true, token: token, result: admin, message: "Successfully created." });
     }
     catch (err) {
         console.trace(err);
-        return res.status(500).send({ status: false, auth: false, message: err });
+        return res.status(500).send({ error: true, auth: false, message: err });
     }
 };
 
@@ -37,7 +37,7 @@ exports.findAll = async (req, res) => {
     try {
         let all = await Admin.find({});
 
-        res.status(200).send({ error: false, admins: all });
+        res.status(200).send({ admins: all });
     }
     catch (err) {
         console.trace(err);
@@ -54,7 +54,7 @@ exports.findOne = async (req, res) => {
     try {
         const admin = await Admin.findById(id);
 
-        return res.status(200).send({ status: true, result: admin, message: "Get the admin successfully!" })
+        return res.status(200).send({ result: admin, message: "Get the admin successfully!" })
     } catch (error) {
         console.trace(error);
 
@@ -68,17 +68,17 @@ exports.update = async (req, res) => {
     const { firstName, lastName, email, phoneNumber } = req.body;
 
     if (!id || !firstName || !lastName || !email) {
-        return res.status(400).send({ auth: false, message: "Missing Parameters!" })
+        return res.status(400).send({ error: true, message: "Missing Parameters!" })
     }
 
     try {
         const admin = await Admin.updateOne({ _id: id }, { firstName, lastName, email, phoneNumber });
 
-        return res.status(200).send({ status: true, result: admin, message: "Update the admin successfully!" })
+        return res.status(200).send({ result: admin, message: "Update the admin successfully!" })
     } catch (error) {
         console.trace(error);
 
-        return res.status(500).send({ status: false, message: error });
+        return res.status(500).send({ error: true, message: error });
     }
 };
 
@@ -97,7 +97,7 @@ exports.findAllActive = async (req, res) => {
     try {
         let all = await Admin.find({ isActive: true });
 
-        res.status(200).send({ error: false, admins: all });
+        res.status(200).send({ admins: all });
     }
     catch (err) {
         console.trace(err);
