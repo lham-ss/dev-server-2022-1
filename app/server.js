@@ -36,7 +36,7 @@ async function main() {
         .catch(err => {
             console.log('--- Error connecting to MongoDB ---');
             console.trace(err);
-            console.log('--- Killing process..');
+            console.log('--- Killing process...');
 
             process.exit();
         });
