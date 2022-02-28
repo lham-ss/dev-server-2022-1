@@ -1,4 +1,4 @@
-// administrator accounts model - lham 2022
+// User accounts model - lham 2022
 
 module.exports = (mongoose) => {
     const schema = mongoose.Schema(
@@ -9,7 +9,12 @@ module.exports = (mongoose) => {
             isActive: { type: Boolean, required: true, default: true },
             email: { type: String, required: true },
             password: { type: String, required: true },
-            // registeredDate: { type: Date, default: Date.now() }, not needed with timestamps?
+            roles: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Role"
+                }
+            ],
         },
         {
             timestamps: true,
@@ -20,11 +25,13 @@ module.exports = (mongoose) => {
 
     schema.method("toJSON", function () {
         const { __v, _id, ...object } = this.toObject();
+
         object.id = _id;
+
         return object;
     });
 
-    const model = mongoose.model('admin', schema);
+    const model = mongoose.model('user', schema);
 
     return model;
 }

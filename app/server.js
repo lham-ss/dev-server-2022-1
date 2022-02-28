@@ -4,21 +4,13 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-/*
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-dotenv.config();
-const app = express();
-*/
-
 const PORT = process.env.HTTP_PORT || 4000;
 
 var corsOptions = {
-    origin: "http://localhost:" + PORT
+    origin: "http://localhost:4200",
 };
 
-app.use(cors(corsOptions));                       // set up CORS policy
+app.use(cors(/*corsOptions*/));                   // set up CORS policy
 app.use(express.json());                          // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true }));  // parse requests of content-type - application/x-www-form-urlencoded
 
@@ -47,6 +39,9 @@ async function main() {
 
         process.exit();
     }
+
+    userRoles = require('./_helpers/initUserRoles');
+    userRoles.initializeUserRoles();
 
     app.listen(PORT, () => {
         console.log(`--- Server is running on port ${PORT}.`);      // listen for incoming http requests on PORT

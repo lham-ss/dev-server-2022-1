@@ -1,12 +1,41 @@
+const auth = require('../controllers/auth.controller');
+
+const mw = require('../middleware/verifyUserCreation');
+const jwt = require('../middleware/authJwt');
+
+var router = require('express').Router();
+
 module.exports = app => {
-    const auth = require('../controllers/auth.controller');
-    const mw = require('../middleware/auth.middleware');
 
-    var router = require('express').Router();
+    app.use(function (req, res, next) {
+        res.header(
+            "Access-Control-Allow-Headers",
+            "x-access-token, Origin, Content-Type, Accept"
+        );
 
-    router.post("/", auth.login); // attempt login, set up jwt token
+        next();
+    });
 
-    router.post("/activate/:id", mw.isUserAuthenticated, auth.activateAccount); // set admin account to isActive = req.body.status
+    router.post(
+        "/",
+        auth.login
+    );
+
+    router.post(
+        "/activate/:id",
+        jwt.verifyToken,
+        auth.activateAccount
+    );
+
+    router.post(
+        "/create",
+        [
+            jwt.verifyToken,
+            mw.checkDuplicateUsernameOrEmail,
+            mw.checkRolesExisted
+        ],
+        auth.createUser
+    );
 
     app.use('/api/auth', router);
 }

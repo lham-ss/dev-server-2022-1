@@ -1,4 +1,4 @@
-const { verifyWebToken } = require('../jwt_auth');
+const { verifyWebToken } = require('../old.jwt_auth');
 
 // import { verifyWebTokenMJS } from '../jwt_auth.mjs';
 
@@ -24,12 +24,14 @@ const isUserAuthenticated = (req, res, next) => {
                     console.error('--- JsonWebTokenError: invalid token... refusing authentication.')
 
                     return res.status(401).json({
+                        auth: false,
                         status: 401,
                         message: 'UNAUTHORIZED'
                     });
                 })
         } else {
             return res.status(403).json({
+                auth: false,
                 status: 403,
                 message: 'FORBIDDEN'
             })
