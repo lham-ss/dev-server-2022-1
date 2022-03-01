@@ -18,18 +18,20 @@ module.exports = app => {
         auth.login
     );
 
-    /* add route is toggle the user isActive boolean val
-    router.post("/activate/:id",
+    router.post("/activeStatus/:id",
         [
-            jwt.verifyToken
+            jwt.verifyToken,
+            jwt.isAdmin,
+            jwt.isActive,
         ],
-        auth.activateAccount,
+        auth.updateIsActive,
     );
-    */
 
     router.post("/create",
         [
             jwt.verifyToken,
+            jwt.isAdmin,
+            jwt.isActive,
             mw.checkDuplicateUsernameOrEmail,
             mw.checkRolesExisted
         ],

@@ -10,9 +10,9 @@ var corsOptions = {
     origin: "http://localhost:4200",
 };
 
-app.use(cors(/*corsOptions*/));                   // set up CORS policy
-app.use(express.json());                          // parse requests of content-type - application/json
-app.use(express.urlencoded({ extended: true }));  // parse requests of content-type - application/x-www-form-urlencoded
+app.use(cors(/*corsOptions*/));                     // set up CORS policy
+app.use(express.json());                            // parse requests of content-type - application/json
+app.use(express.urlencoded({ extended: true }));    // parse requests of content-type - application/x-www-form-urlencoded
 
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to dev-server-1. We are running." });  // set up a test route
@@ -39,11 +39,6 @@ async function main() {
 
         process.exit();
     }
-
-    /*
-    userRoles = require('./_helpers/mongo_init');
-    userRoles.initializeUserRoles();
-    */
 
     app.listen(PORT, () => {
         console.log(`--- Server is running on port ${PORT}.`);      // listen for incoming http requests on PORT

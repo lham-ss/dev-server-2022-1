@@ -4,7 +4,7 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
-verifyToken = (req, res, next) => {
+exports.verifyToken = (req, res, next) => {
     let token = req.headers["x-access-token"];
 
     if (!token) {
@@ -23,7 +23,23 @@ verifyToken = (req, res, next) => {
     });
 };
 
-isAdmin = (req, res, next) => {
+exports.isActive = (req, res, next) => {
+    User.findById(req.userId).exec((err, user) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+
+        if (!user.isActive) {
+            res.status(403).send({ message: "This user account is not set to active." });
+            return;
+        }
+
+        next();
+    })
+}
+
+exports.isAdmin = (req, res, next) => {
     User.findById(req.userId).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
@@ -51,7 +67,7 @@ isAdmin = (req, res, next) => {
     });
 };
 
-isModerator = (req, res, next) => {
+exports.isModerator = (req, res, next) => {
     User.findById(req.userId).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
@@ -78,11 +94,3 @@ isModerator = (req, res, next) => {
         );
     });
 };
-
-const authJwt = {
-    verifyToken,
-    isAdmin,
-    isModerator
-};
-
-module.exports = authJwt;
