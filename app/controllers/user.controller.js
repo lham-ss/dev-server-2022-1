@@ -59,7 +59,7 @@ exports.delete = async (req, res) => {
         return res.status(400).send({ error: true, message: "Missing Parameters!" })
     }
 
-    if (req.id == id) {
+    if (req.userId == id) {
         return res.status(200).send({ error: true, message: "You cannot delete your own account." })
     }
 

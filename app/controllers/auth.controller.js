@@ -136,7 +136,7 @@ exports.createUser = (req, res) => {
 }
 
 
-exports.signin = (req, res) => {
+exports.login = (req, res) => {
     const { email, password } = req.body;
 
     User.findOne({
@@ -162,7 +162,7 @@ exports.signin = (req, res) => {
                 });
             }
 
-            var token = jwt.sign({ id: user.id }, config.secret, {
+            var token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
                 expiresIn: 86400 // 24 hours
             });
 

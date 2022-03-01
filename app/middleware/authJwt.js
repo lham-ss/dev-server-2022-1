@@ -10,12 +10,12 @@ verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(403).send({ message: "No token provided!" });
     }
+
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
+            console.trace(err);
             return res.status(401).send({ message: "Unauthorized!" });
         }
-
-        console.log(JSON.stringify(decoded, null, 2));
 
         req.userId = decoded.id || decoded._id;
 

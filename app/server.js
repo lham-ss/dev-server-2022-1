@@ -18,10 +18,10 @@ app.get("/", (req, res) => {
     res.json({ message: "Welcome to dev-server-1. We are running." });  // set up a test route
 });
 
-require('./routes/admin.routes')(app);
+require('./routes/user.routes')(app);
 require('./routes/auth.routes')(app);
 
-const mongo = require('./mongo_connector');
+const mongo = require('./_helpers/mongo_connect');
 
 async function main() {
     await mongo.connectToDatabase()
@@ -40,8 +40,10 @@ async function main() {
         process.exit();
     }
 
-    userRoles = require('./_helpers/initUserRoles');
+    /*
+    userRoles = require('./_helpers/mongo_init');
     userRoles.initializeUserRoles();
+    */
 
     app.listen(PORT, () => {
         console.log(`--- Server is running on port ${PORT}.`);      // listen for incoming http requests on PORT

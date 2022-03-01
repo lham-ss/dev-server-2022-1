@@ -1,5 +1,4 @@
 const auth = require('../controllers/auth.controller');
-
 const mw = require('../middleware/verifyUserCreation');
 const jwt = require('../middleware/authJwt');
 
@@ -12,23 +11,23 @@ module.exports = app => {
             "Access-Control-Allow-Headers",
             "x-access-token, Origin, Content-Type, Accept"
         );
-
         next();
     });
 
-    router.post(
-        "/",
+    router.post("/",
         auth.login
     );
 
-    router.post(
-        "/activate/:id",
-        jwt.verifyToken,
-        auth.activateAccount
+    /* add route is toggle the user isActive boolean val
+    router.post("/activate/:id",
+        [
+            jwt.verifyToken
+        ],
+        auth.activateAccount,
     );
+    */
 
-    router.post(
-        "/create",
+    router.post("/create",
         [
             jwt.verifyToken,
             mw.checkDuplicateUsernameOrEmail,

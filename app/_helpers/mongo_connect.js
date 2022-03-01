@@ -1,4 +1,6 @@
-const db = require("./models");
+const db = require("../models");
+
+const init = require('./mongo_init');
 
 let connection = null;
 
@@ -24,9 +26,12 @@ async function connectToDatabase() {
                 console.log("--- MongoDB connection error. (Did you add this IP to the Mongo Atlas WhiteList?)");
                 reject(err);
             });
+
+            await init.initRoles();
+            await init.initUsers();
         }
         catch (err) {
-            console.log('--- Error caught in mongo_connector...');
+            console.log('--- Error caught in mongo_connect...');
             console.trace(err);
             reject(err);
         }
