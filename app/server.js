@@ -1,17 +1,21 @@
 require('dotenv').config();
 
 const express = require("express");
-const mongo = require('./_helpers/mongo_connect');
 const cors = require("cors");
+
+const mongo = require('./_helpers/mongo_connect');
+const websocket = require('./_helpers/websocket');
+const ngroc = require('./_helpers/ngrok_connect');
+
 const app = express();
 
 const PORT = process.env.HTTP_PORT || 4000;
 
 var corsOptions = {
-    origin: "http://localhost:4000",
+    origin: "*",
 };
 
-app.use(cors(/*corsOptions*/));                     // set up CORS policy
+app.use(cors(corsOptions));                         // set up CORS policy
 app.use(express.json());                            // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true }));    // parse requests of content-type - application/x-www-form-urlencoded
 
@@ -40,9 +44,14 @@ async function main() {
         process.exit();
     }
 
-    app.listen(PORT, () => {
-        console.log(`--- Server is running on port ${PORT}.`);      // listen for incoming http requests on PORT
+    let server = require('http').Server(app);
+
+    server.listen(PORT, () => {                                      // listen for incoming http requests on PORT
+        console.log(`--- Server is running on port ${PORT}.`);
+        websocket.initWebSocket(server);                             // connect our websocket
+        ngroc.tunnelUp();                                            // connect to ngrok.io tunnel service
     });
 }
 
 main();
+

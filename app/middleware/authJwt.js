@@ -31,7 +31,7 @@ exports.isActive = (req, res, next) => {
         }
 
         if (!user.isActive) {
-            res.status(403).send({ message: "This user account is not set to active." });
+            res.status(403).send({ message: "This account is not set to active." });
             return;
         }
 
@@ -60,7 +60,7 @@ exports.isAdmin = (req, res, next) => {
                         return;
                     }
                 }
-                res.status(403).send({ message: "Require Admin Role!" });
+                res.status(403).send({ message: "Requires Admin Role!" });
                 return;
             }
         );
@@ -88,7 +88,7 @@ exports.isModerator = (req, res, next) => {
                         return;
                     }
                 }
-                res.status(403).send({ message: "Require Moderator Role!" });
+                res.status(403).send({ message: "Requires Moderator Role!" });
                 return;
             }
         );
