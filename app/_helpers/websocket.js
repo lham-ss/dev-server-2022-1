@@ -16,7 +16,7 @@ const initWebSocket = (httpServer) => {
     io.on('connection', socket => {
         console.log('--- new websocket connection: ' + socket.id);
 
-        socket.on('disconnected', () => {
+        socket.on('disconnect', () => {
             console.log(`--- websocket ${socket.id} has disconnected.`);
 
             /* handle any cleanup here */
@@ -24,6 +24,8 @@ const initWebSocket = (httpServer) => {
 
         socket.on('ws-test', (data) => {
             console.log('--- websocket-test: ', data);
+
+            socket.emit('ws-test', { data_received: true, received: data });
         });
 
     });
