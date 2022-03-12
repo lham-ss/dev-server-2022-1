@@ -23,9 +23,9 @@ const initWebSocket = (httpServer) => {
         });
 
         socket.on('ws-test', (data) => {
-            console.log('--- websocket-test: ', data);
+            console.log('--- websocket-test: ', data);                       // receive websocket test data
 
-            socket.emit('ws-test', { data_received: true, received: data });
+            socket.emit('ws-test', { data_received: true, received: data }); // emit test results back to app
         });
 
     });
