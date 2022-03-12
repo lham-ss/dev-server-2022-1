@@ -19,10 +19,8 @@ app.use(cors(corsOptions));                         // set up CORS policy
 app.use(express.json());                            // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true }));    // parse requests of content-type - application/x-www-form-urlencoded
 
-app.get("/", (req, res) => {
-    res.status(200).json({ message: "Welcome to dev-server-1. We are running." });  // set up a test route
-});
 
+require('./routes/test.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/auth.routes')(app);
 require('./routes/twilio.callback.routes')(app);
@@ -30,7 +28,7 @@ require('./routes/twilio.callback.routes')(app);
 async function main() {
     await mongo.connectToDatabase()
         .catch(err => {
-            console.log('--- Error connecting to MongoDB ---');
+            console.log('--- Error connecting to MongoDB');
             console.trace(err);
             console.log('--- Killing process...');
 
@@ -38,7 +36,7 @@ async function main() {
         });
 
     if (!mongo.GetConnection()) {
-        console.log('--- No exception thrown but mongo connetion still undefined ---');
+        console.log('--- No exception thrown but mongo connetion still undefined.');
         console.log('--- Killing process...');
 
         process.exit();
