@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const db = require("../models");
 
 const Users = db.user;
@@ -34,14 +35,20 @@ exports.findOne = async (req, res) => {
 
 exports.update = async (req, res) => {
     const id = req.params.id;
-    const { firstName, lastName, email, phoneNumber } = req.body;
+    const { firstName, lastName, email, phoneNumber, newPassword } = req.body;
 
     if (!id || !firstName || !lastName || !email) {
         return res.status(400).send({ error: true, message: "Missing Parameters!" })
     }
 
+    let update = { firstName, lastName, email, phoneNumber };
+
+    if (newPassword && newPassword.length)
+        update.password = bcrypt.hashSync(newPassword, 8);
+
+
     try {
-        const user = await Users.updateOne({ _id: id }, { firstName, lastName, email, phoneNumber });
+        const user = await Users.updateOne({ _id: id }, update);
 
         return res.status(200).send({ result: user, message: "Update the admin successfully!" })
     } catch (error) {

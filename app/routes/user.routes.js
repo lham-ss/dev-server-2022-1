@@ -14,7 +14,7 @@ module.exports = app => {
     router.get("/:id", user.findOne);             // find user by id
     router.put("/:id", user.update);              // update user by id
     router.delete("/:id", user.delete);           // delete user by id
-    router.delete("/", user.deleteAll);           // delete everything
+    router.delete("/", user.deleteAll);           // delete everything (not active)
 
     app.use('/api/user',
         [auth.verifyToken],

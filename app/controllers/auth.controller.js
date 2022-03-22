@@ -25,7 +25,7 @@ exports.updateIsActive = async (req, res) => {
 };
 
 exports.createUser = (req, res) => {
-    const { email, password, roles, firstName, lastName, phoneNumber } = req.body;
+    const { email, newPassword, roles, firstName, lastName, phoneNumber } = req.body;
 
     const user = new User({
         email,
@@ -33,7 +33,7 @@ exports.createUser = (req, res) => {
         lastName,
         phoneNumber,
         isActive: true,
-        password: bcrypt.hashSync(password, 8)
+        password: bcrypt.hashSync(newPassword, 8)
     });
 
     user.save((err, user) => {
