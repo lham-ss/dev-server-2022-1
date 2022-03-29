@@ -38,5 +38,5 @@ module.exports = app => {
         user.adminAccess
     );
 
-    app.use('/api/test', testRoutes);
+    app.use('/api/test', testRoutes); //wtf
 }
