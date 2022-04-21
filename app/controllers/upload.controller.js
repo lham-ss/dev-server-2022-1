@@ -20,6 +20,18 @@ const openCSVFileStream = (fileName) => {
     })
 }
 
+const onRecordFunction = (record, data) => {
+    return {
+        email: record.email ?? '',
+        firstName: record.firstName ?? '',
+        lastName: record.lastName ?? '',
+        cellNumber: record.cellNumber ?? '',
+        clientId: record.clientId ?? '',
+    }
+};
+
+const MAX_LINES = 4;
+
 const processCSVStream = (stream) => {
     return new Promise((resolve, reject) => {
         let recs = [];
@@ -27,17 +39,20 @@ const processCSVStream = (stream) => {
         let options = {
             relax: true,
             columns: headers => headers.map(col => camelCase(col)),
+            on_record: onRecordFunction,
             from_line: 1,
-            skip_empty_lines: true
+            skip_empty_lines: true,
+            to_line: MAX_LINES,
+            trim: true,
         }
 
         stream.pipe(
-            csvParse(options, (err, data) => {
+            csvParse.parse(options, (err, data) => {
                 err ? console.trace(err) : recs.push(data);
             })
         );
 
-        finished(csvStream, (err) => {
+        finished(stream, (err) => {
             err ? reject(err) : resolve(recs);
         });
     });
@@ -65,9 +80,15 @@ exports.uploadCsvFile = (req, res) => {
             recs = await processCSVStream(stream);
         }
         catch (e) {
+            console.trace(e);
+
             return res.status(500).json({ error: true, errorMessage: 'Error while parsing CSV file.', err: e });
         }
 
-        res.status(200).json({ 'uploaded': true })
+        res.status(200).json({ 'uploaded': true, error: false, results: recs })
     });
 }
+
+
+
+
