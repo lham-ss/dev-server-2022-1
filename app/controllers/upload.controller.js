@@ -1,6 +1,9 @@
 const fs = require('fs');
 const csvParse = require('csv-parse');
 
+const phoneLibUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+const phoneLibFormat = require('google-libphonenumber').PhoneNumberFormat;
+
 const { finished } = require('stream');
 const { camelCase } = require('lodash');
 
@@ -21,16 +24,37 @@ const openCSVFileStream = (fileName) => {
 }
 
 const onRecordFunction = (record, data) => {
+    let cellNumber = '', e164Number = '', validNumber = false;
+
+    if (record.cellNumber) {
+        try {
+            let num = phoneLibUtil.parseAndKeepRawInput(record.cellNumber, record.phoneRegion ?? 'US');
+
+            validNumber = phoneLibUtil.isValidNumber(num);
+            if (validNumber) {
+                cellNumber = phoneLibUtil.format(num, phoneLibFormat.NATIONAL);
+                e164Number = phoneLibUtil.format(num, phoneLibFormat.E164);
+            }
+            else cellNumber = record.cellNumber;
+        }
+        catch (e) {
+            console.trace(e);
+        }
+    }
+
     return {
         email: record.email ?? '',
         firstName: record.firstName ?? '',
         lastName: record.lastName ?? '',
-        cellNumber: record.cellNumber ?? '',
+        cellNumber: cellNumber,
+        e164Number: e164Number,
+        isValidNumber: validNumber,
         clientId: record.clientId ?? '',
+        branch: record.branch ?? '',
     }
 };
 
-const MAX_LINES = 4;
+const MAX_LINES = 25;
 
 const processCSVStream = (stream) => {
     return new Promise((resolve, reject) => {
@@ -48,7 +72,11 @@ const processCSVStream = (stream) => {
 
         stream.pipe(
             csvParse.parse(options, (err, data) => {
-                err ? console.trace(err) : recs.push(data);
+                if (err) reject(err);
+                else if (data?.length) {
+                    for (ob of data) recs.push(ob); // csvParse returns array of data
+                }
+                else console.log('Not sure what to do with: ' + data);
             })
         );
 
