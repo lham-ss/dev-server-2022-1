@@ -24,6 +24,7 @@ require('./routes/user.routes')(app);
 require('./routes/auth.routes')(app);
 require('./routes/twilio.callback.routes')(app);
 require('./routes/upload.routes')(app);
+require('./routes/target.routes')(app);
 
 async function main() {
     await mongo.connectToDatabase()

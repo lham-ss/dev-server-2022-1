@@ -1,5 +1,6 @@
 const fs = require('fs');
 const csvParse = require('csv-parse');
+const { v4: uuidv4 } = require('uuid');
 
 const phoneLibUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const phoneLibFormat = require('google-libphonenumber').PhoneNumberFormat;
@@ -73,8 +74,8 @@ const processCSVStream = (stream) => {
         stream.pipe(
             csvParse.parse(options, (err, data) => {
                 if (err) reject(err);
-                else if (data?.length) {
-                    for (ob of data) recs.push(ob); // csvParse returns array of data
+                else if (data?.length) {               // csvParse returns array of data
+                    for (ob of data) recs.push(ob);
                 }
                 else console.log('Not sure what to do with: ' + data);
             })
@@ -93,7 +94,7 @@ exports.uploadCsvFile = (req, res) => {
     }
 
     let file = req.files.csvFile;
-    let uploadPath = '/tmp/' + file.name + '.csv';
+    let uploadPath = '/tmp/' + uuidv4() + '.csv';
 
     console.log(uploadPath);
 
