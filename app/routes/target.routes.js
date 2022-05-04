@@ -6,7 +6,9 @@ var router = express.Router();
 
 module.exports = app => {
 
-    router.post("/", targets.create);  // create a new sms/email target document
+    router.post("/", targets.create);             // create a new sms/email target document
+    router.get("/:id", targets.findOne);          // find target by id
+    router.get("/", targets.findAll);                // list all user
 
     app.use('/api/targets',
         /* [auth.verifyToken], */
