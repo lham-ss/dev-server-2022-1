@@ -47,6 +47,7 @@ const attachPhoneNumber = async (phoneNumberId, targetId) => {
 exports.create = async (req, res) => {
     let target = req.body;
 
+    console.log(target);
     Promise.all([createTarget(target), createPhoneNumber(target.E164Number)])
         .then(async ([doc, num]) => {
             if (doc && num) {
@@ -56,7 +57,7 @@ exports.create = async (req, res) => {
             }
         })
         .catch((e) => {
-            res.status(500).json({ success: false, error: true, message: 'Server error.', err: e });
+            res.status(500).json({ success: false, message: 'MongoDB/Server error.', error: e });
         })
 };
 
