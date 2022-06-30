@@ -19,12 +19,14 @@ app.use(cors(corsOptions));                         // set up CORS policy
 app.use(express.json());                            // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true }));    // parse requests of content-type - application/x-www-form-urlencoded
 
-require('./routes/test.routes')(app);
-require('./routes/user.routes')(app);
-require('./routes/auth.routes')(app);
-require('./routes/twilio.callback.routes')(app);
-require('./routes/upload.routes')(app);
-require('./routes/target.routes')(app);
+function initRoutes(app) {
+    require('./routes/test.routes')(app);
+    require('./routes/user.routes')(app);
+    require('./routes/auth.routes')(app);
+    require('./routes/twilio.callback.routes')(app);
+    require('./routes/upload.routes')(app);
+    require('./routes/target.routes')(app);
+}
 
 async function main() {
     await mongo.connectToDatabase()
@@ -43,7 +45,11 @@ async function main() {
 
     server.listen(PORT, () => {                                      // listen for incoming http requests on PORT
         console.log(`--- Server is running on port ${PORT}.`);
-        websocket.initWebSocket(server);                             // connect our websocket
+
+        app.webSockets = websocket.initWebSocket(server);            // connect our websocket
+
+        initRoutes(app);                                             // set up all routes/end points
+
         ngroc.tunnelUp();                                            // connect to ngrok.io tunnel service
     });
 }

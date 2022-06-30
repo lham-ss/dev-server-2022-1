@@ -29,6 +29,8 @@ const initWebSocket = (httpServer) => {
         });
 
     });
+
+    return io;
 }
 
 const webSocket = () => {

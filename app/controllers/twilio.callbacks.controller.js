@@ -29,6 +29,11 @@ exports.conversationPostHook = (req, res) => {
 
     console.log("(200 OK!)");
 
+    try {
+        res.app.webSockets.emit('post-chat-webhook', req.body);
+    }
+    catch (e) { console.trace(e) }
+
     res.sendStatus(200);
 }
 
@@ -50,6 +55,11 @@ exports.conversationPreHook = (req, res) => {
     */
 
     console.log("(200 OK!)");
+
+    try {
+        res.app.webSockets.emit('pre-chat-webhook', req.body);
+    }
+    catch (e) { console.trace(e) }
 
     res.sendStatus(200);
 }

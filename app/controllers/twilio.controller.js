@@ -6,7 +6,7 @@ const AccessToken = twilio.jwt.AccessToken;
 const ChatGrant = AccessToken.ChatGrant;
 
 exports.createChatToken = async (req, res) => {
-    const identity = req.body.identity;
+    const identity = req.body.identity ?? 'lawrence';
 
     if (!identity) return res.json({ token: null, error: true, message: 'Identity required.' })
 
